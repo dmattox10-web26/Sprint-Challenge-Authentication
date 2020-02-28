@@ -3,6 +3,7 @@ import { Card, CardTitle, Row, Col, Form, FormGroup, Label, Input, Button } from
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup';
+import axios from 'axios'
 
 const Login = (props) => {
   const history = useHistory()
@@ -21,7 +22,12 @@ const Login = (props) => {
       .required('Required'),
     }),
     onSubmit: values => {
-        
+        axios.post('api/auth/login', values)
+        .then(res => {
+            const token = res.data.token
+            localStorage.setItem('token', token)
+            history.push('/jokes')
+        })
     },
   });
 
@@ -35,7 +41,7 @@ const Login = (props) => {
               <Card >
                 <CardTitle style={{ margin: 'auto', fontWeight: 'bold', marginTop: '1rem', fontSize: '2rem' }} >Log In</CardTitle>
                 <Col xs='12'>
-                  <Form onSubmit={formik.handleSubmit}>
+                  <Form onSubmit={signUp.handleSubmit}>
                     <FormGroup>
                       <Label for='username'>Username</Label>
                       <Col xs='12'>
